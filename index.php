@@ -1,20 +1,17 @@
 <?php
 
-echo "<h1>To działa !!!</h1>";
+declare(strict_types=1);
 
-$test = ['01', '02', '03', '04'];
+namespace App;
 
-function dump($data)
-{
-    echo '<div style="
-    display: inline-block;
-    padding: 10px;
-    border: 1px solid black;
-    background-color: lightgray;
-    ">
-    <pre>';
-    print_r($data);
-    echo '</pre></div>';
-}
+require_once("src/utils/debug.php");
+require_once("src/View.php");
 
-dump($test);
+const DEFAULT_ACTION = 'list';
+
+$action = $_GET['action'] ?? DEFAULT_ACTION;
+
+$view = new View();
+$view->render($action);
+
+dump($action);
