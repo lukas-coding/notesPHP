@@ -66,6 +66,7 @@ select {
   border: 1px solid #BEBEBE;
   padding: 7px;
   margin: 0px;
+  transition: all 0.30s ease-in-out;
   -webkit-transition: all 0.30s ease-in-out;
   -moz-transition: all 0.30s ease-in-out;
   -ms-transition: all 0.30s ease-in-out;
@@ -95,6 +96,7 @@ form .field-long {
 
 form .field-textarea {
   height: 100px;
+  resize: none;
 }
 
 form input[type=submit],
