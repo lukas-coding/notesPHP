@@ -5,36 +5,42 @@ declare(strict_types=1);
 namespace App;
 
 require_once("src/View.php");
+require_once("src/Database.php");
 
 class Controller
 {
-
     private const DEFAULT_ACTION = 'list';
-    private $getData;
-    private $postData;
+    private static $connection;
+    private $request;
+    private $view;
 
-    public function __construct(array $getData, array $postData)
+    public static function initConfig(array $connection): void
     {
-        $this->getData = $getData;
-        $this->postData = $postData;
+        self::$connection = $connection;
+    }
+
+    public function __construct(array $request)
+    {
+        $db = new Database(self::$connection['db']);
+        $this->request = $request;
+        $this->view = new View();
     }
 
     public function run(): void
     {
-
-        $action = $this->getData['action'] ?? self::DEFAULT_ACTION;
-        $view = new View();
         $viewParams = [];
-
-        switch ($action) {
+        switch ($this->getAction()) {
             case 'create';
                 $page = 'create';
                 $created = false;
-                if (!empty($this->postData)) {
+                $dataPost = $this->getRequestPost();
+
+
+                if (!empty($dataPost)) {
                     $created = true;
                     $viewParams = [
-                        'title' => $this->postData['title'],
-                        'description' => $this->postData['description']
+                        'title' => $dataPost['title'],
+                        'description' => $dataPost['description']
                     ];
                 }
                 $viewParams['created'] = $created;
@@ -52,6 +58,22 @@ class Controller
                 $viewParams['resultList'] = "wyświetlamy notatki";
                 break;
         }
-        $view->render($page, $viewParams);
+        $this->view->render($page, $viewParams);
+    }
+
+    private function getAction(): string
+    {
+        $dataGet = $this->getRequestGet();
+        return $dataGet['action'] ?? self::DEFAULT_ACTION;
+    }
+
+    private function getRequestGet(): array
+    {
+        return $this->request['get'] ?? [];
+    }
+
+    private function getRequestPost(): array
+    {
+        return $this->request['post'] ?? [];
     }
 }
