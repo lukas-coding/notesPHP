@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Exception\AppException;
+use App\Exception\ConfigurationException;
+
 require_once("src/View.php");
 require_once("src/Database.php");
 
@@ -16,14 +19,20 @@ class Controller
 
     public static function initConfig(array $connection): void
     {
+
         self::$connection = $connection;
     }
 
     public function __construct(array $request)
     {
-        $db = new Database(self::$connection['db']);
-        $this->request = $request;
-        $this->view = new View();
+
+        if (empty(self::$connection['db'])) {
+            throw new ConfigurationException('Błąd przy próbie połączenia');
+        } else {
+            $db = new Database(self::$connection['db']);
+            $this->request = $request;
+            $this->view = new View();
+        }
     }
 
     public function run(): void
