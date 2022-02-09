@@ -13,7 +13,8 @@ require_once("src/Database.php");
 class Controller
 {
     private const DEFAULT_ACTION = 'list';
-    private static $connection;
+    private static $connection = [];
+    private $database;
     private $request;
     private $view;
 
@@ -29,7 +30,7 @@ class Controller
         if (empty(self::$connection['db'])) {
             throw new ConfigurationException('Błąd przy próbie połączenia');
         } else {
-            $db = new Database(self::$connection['db']);
+            $this->database = new Database(self::$connection['db']);
             $this->request = $request;
             $this->view = new View();
         }
@@ -44,13 +45,10 @@ class Controller
                 $created = false;
                 $dataPost = $this->getRequestPost();
 
-
                 if (!empty($dataPost)) {
                     $created = true;
-                    $viewParams = [
-                        'title' => $dataPost['title'],
-                        'description' => $dataPost['description']
-                    ];
+                    $this->database->createNote($dataPost);
+                    header('location: /');
                 }
                 $viewParams['created'] = $created;
                 break;
