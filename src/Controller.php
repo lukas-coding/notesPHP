@@ -6,6 +6,7 @@ namespace App;
 
 use App\Exception\AppException;
 use App\Exception\ConfigurationException;
+use App\Exception\NotFoundException;
 
 require_once("src/View.php");
 require_once("src/Database.php");
@@ -38,22 +39,33 @@ class Controller
 
     public function run(): void
     {
-        $viewParams = [];
+
         switch ($this->getAction()) {
             case 'create';
                 $page = 'create';
-                $created = false;
                 $dataPost = $this->getRequestPost();
 
                 if (!empty($dataPost)) {
-                    $created = true;
-                    $this->database->createNote($dataPost);
-                    header('location: /');
+                    $noteData = [
+                        'title' => $dataPost['title'],
+                        'description' => $dataPost['description']
+                    ];
+                    $this->database->createNote($noteData);
+                    header('location: /?before=created');
                 }
-                $viewParams['created'] = $created;
                 break;
 
             case 'show';
+                $page = 'show';
+                $data = $this->getRequestGet();
+                $noteId = (int) $data['id'];
+
+                try {
+                    $this->database->getNote($noteId);
+                } catch (NotFoundException $e) {
+                    exit('Tu controller');
+                }
+
                 $viewParams = [
                     'title' => 'Moja notatka',
                     'description' => 'Opis'
@@ -62,10 +74,16 @@ class Controller
 
             default:
                 $page = 'list';
-                $viewParams['resultList'] = "wyświetlamy notatki";
+                $data = $this->getRequestGet();
+                $viewParams = [
+                    'notes' => $this->database->getNotes(),
+                    'before' => $data['before'] ?? null
+                ];
+
+
                 break;
         }
-        $this->view->render($page, $viewParams);
+        $this->view->render($page, $viewParams ?? []);
     }
 
     private function getAction(): string
