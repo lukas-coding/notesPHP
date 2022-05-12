@@ -63,7 +63,7 @@ class Controller
                 try {
                     $this->database->getNote($noteId);
                 } catch (NotFoundException $e) {
-                    exit('Tu controller');
+                    exit('Notatka o takim ID nie istnieje');
                 }
 
                 $viewParams = [
