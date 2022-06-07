@@ -48,7 +48,7 @@ class Database
     {
 
         try {
-            $query = " SELECT id, title, description, created FROM notes ORDER BY id DESC";
+            $query = " SELECT id, title, description, created FROM notes";
             $result = $this->conn->query($query);
             return $result->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {

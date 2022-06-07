@@ -1,5 +1,19 @@
 <div class="list">
   <section>
+    <div class="message error">
+      <?php
+      if (!empty($params['error'])) {
+        switch ($params['error']) {
+          case 'noteNotFound':
+            echo 'Notatka nie została znaleziona !';
+            break;
+          case 'missingNoteId':
+            echo 'Niepoprawne ID notatki';
+            break;
+        }
+      }
+      ?>
+    </div>
     <div class="message">
       <?php
       if (!empty($params['before'])) {
@@ -31,7 +45,7 @@
               <td><?php echo (int) $note['id'] ?></td>
               <td><?php echo htmlentities($note['title']) ?></td>
               <td><?php echo htmlentities($note['created']) ?></td>
-              <td> <a href="/?action=show&id=<?php echo (int) $note['id'] ?>">Pokaż</a></td>
+              <td> <a href="/?action=show&id=<?php echo (int) $note['id'] ?>"> <button>Pokaż</button> </a></td>
             </tr>
           <?php endforeach; ?>
         </tbody>

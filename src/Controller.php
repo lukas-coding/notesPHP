@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Request;
 use App\Exception\AppException;
 use App\Exception\ConfigurationException;
 use App\Exception\NotFoundException;
 
+require_once('src/Request.php');
 require_once("src/View.php");
 require_once("src/Database.php");
 
@@ -25,7 +27,7 @@ class Controller
         self::$connection = $connection;
     }
 
-    public function __construct(array $request)
+    public function __construct(Request $request)
     {
 
         if (empty(self::$connection['db'])) {
@@ -43,62 +45,54 @@ class Controller
         switch ($this->getAction()) {
             case 'create';
                 $page = 'create';
-                $dataPost = $this->getRequestPost();
 
-                if (!empty($dataPost)) {
+                if ($this->request->hasPost()) {
                     $noteData = [
-                        'title' => $dataPost['title'],
-                        'description' => $dataPost['description']
+                        'title' => $this->request->postParam('title'),
+                        'description' => $this->request->postParam('description')
                     ];
                     $this->database->createNote($noteData);
                     header('location: /?before=created');
+                    exit;
                 }
                 break;
 
             case 'show';
                 $page = 'show';
-                $data = $this->getRequestGet();
-                $noteId = (int) $data['id'];
+                $noteId = (int)$this->request->getParam('id');
+                if (!$noteId) {
+                    header('Location: /?error=missingNoteId');
+                    exit;
+                }
 
                 try {
-                    $this->database->getNote($noteId);
+                    $note = $this->database->getNote($noteId);
                 } catch (NotFoundException $e) {
-                    exit('Notatka o takim ID nie istnieje');
+                    header('Location: /?error=noteNotFound');
+                    exit;
                 }
 
                 $viewParams = [
-                    'title' => 'Moja notatka',
-                    'description' => 'Opis'
+                    'note' => $note
                 ];
+
                 break;
 
             default:
                 $page = 'list';
-                $data = $this->getRequestGet();
                 $viewParams = [
                     'notes' => $this->database->getNotes(),
-                    'before' => $data['before'] ?? null
+                    'before' => $this->request->getParam('before') ?? null,
+                    'error' => $this->request->getParam('error') ?? null
                 ];
-
-
                 break;
         }
+
         $this->view->render($page, $viewParams ?? []);
     }
 
     private function getAction(): string
     {
-        $dataGet = $this->getRequestGet();
-        return $dataGet['action'] ?? self::DEFAULT_ACTION;
-    }
-
-    private function getRequestGet(): array
-    {
-        return $this->request['get'] ?? [];
-    }
-
-    private function getRequestPost(): array
-    {
-        return $this->request['post'] ?? [];
+        return $this->request->getParam('action', self::DEFAULT_ACTION);
     }
 }
