@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App;
 
-require_once('src/Exceptions/NotFoundException.php');
 
 use App\Exception\ConfigurationException;
 use App\Exception\StorageException;

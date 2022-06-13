@@ -1,28 +1,26 @@
 <?php
 
-
 declare(strict_types=1);
 
-namespace App;
+spl_autoload_register(function (string $classNameSpace) {
+    $path = str_replace(['\\', 'App/'], ['/', ''], $classNameSpace);
+    $path = "src/$path.php";
+    require_once($path);
+});
 
+require_once("src/Utils/debug.php");
+$config = require_once('config/config.php');
 
+use App\Controller\AbstractController;
+use App\Controller\Controller;
 use App\Request;
 use App\Exception\AppException;
 use App\Exception\ConfigurationException;
-use Throwable;
 
-require_once("src/Utils/debug.php");
-require_once("src/Controller.php");
-require_once('src/Request.php');
-require_once('src/Exceptions/AppException.php');
-require_once('src/Exceptions/StorageException.php');
-require_once('src/Exceptions/ConfigurationException.php');
-
-$config = require_once('config/config.php');
 $request = new Request($_GET, $_POST);
 
 try {
-    Controller::initConfig($config);
+    AbstractController::initConfig($config);
     (new Controller($request))->run();
 } catch (ConfigurationException $e) {
     echo "<h1>Wystąpił błąd w aplikacji</h1>";
