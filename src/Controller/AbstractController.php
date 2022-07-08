@@ -33,7 +33,7 @@ abstract class AbstractController
         }
     }
 
-    public function run(): void
+    final public function run(): void
     {
         $action = $this->action() . 'Action';
         if (!method_exists($this, $action)) {
@@ -44,7 +44,7 @@ abstract class AbstractController
         }
     }
 
-    protected function redirect(string $to, array $params): void
+    final protected function redirect(string $to, array $params): void
     {
         $location = $to;
         if (count($params)) {
@@ -59,7 +59,7 @@ abstract class AbstractController
         exit;
     }
 
-    private function action(): string
+    final private function action(): string
     {
         return $this->request->getParam('action', self::DEFAULT_ACTION);
     }

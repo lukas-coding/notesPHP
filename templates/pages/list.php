@@ -48,7 +48,10 @@
               <td><?php echo $note['id'] ?></td>
               <td><?php echo $note['title'] ?></td>
               <td><?php echo $note['created'] ?></td>
-              <td> <a href="/?action=show&id=<?php echo $note['id'] ?>"> <button>Pokaż</button> </a></td>
+              <td>
+                <a href="/?action=show&id=<?php echo $note['id'] ?>"> <button>Pokaż</button></a>
+                <a href="/?action=delete&id=<?php echo $note['id'] ?>"> <button>Usuń</button> </a>
+              </td>
             </tr>
           <?php endforeach; ?>
         </tbody>
