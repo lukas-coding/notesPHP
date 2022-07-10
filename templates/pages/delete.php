@@ -8,7 +8,8 @@
             <li>Zapisano: <?php echo $note['created']; ?></li>
         </ul>
         <form method="POST" action="/?action=delete">
-            <input type="hidden" value="<?php echo $note['id'] ?>" />
+            <input name="id" type="hidden" value="<?php echo $note['id'] ?>" />
+
             <input type="submit" value="Usuń" style="background-color: #ff8080; cursor: pointer; padding: 5px 10px;
             font-size: 14px;">
         </form>

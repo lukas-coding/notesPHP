@@ -133,7 +133,7 @@ form>div:first-child {
 }
 
 form>div:first-child>label:first-child {
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   font-weight: normal
 }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App;
 
-
 use App\Exception\ConfigurationException;
 use App\Exception\StorageException;
 use App\Exception\NotFoundException;
@@ -39,17 +38,16 @@ class Database
         if (!$note) {
             throw new NotFoundException("Notatka o id: $id nie istnieje");
         }
-
         return $note;
     }
 
     public function getNotes(): array
     {
-
         try {
-            $query = " SELECT id, title, description, created FROM notes";
+            $query = "SELECT ROW_NUMBER() OVER (ORDER BY id) AS lp, id, title, description, created FROM notes";
             $result = $this->conn->query($query);
-            return $result->fetchAll(PDO::FETCH_ASSOC);
+            $notes = $result->fetchAll(PDO::FETCH_ASSOC);
+            return $notes;
         } catch (Throwable $e) {
             throw new StorageException('Nie udało się pobrać notatek', 400, $e);
         }
@@ -81,6 +79,16 @@ class Database
             $result = $this->conn->exec($query);
         } catch (Throwable $e) {
             throw new StorageException('Nie udało się edytować notatki', 400, $e);
+        }
+    }
+
+    public function deleteNote(int $id): void
+    {
+        try {
+            $query = "DELETE FROM notes WHERE id = $id LIMIT 1";
+            $this->conn->exec($query);
+        } catch (Throwable $e) {
+            throw new StorageException('Nie udało się usunać notatki', '400', $e);
         }
     }
 

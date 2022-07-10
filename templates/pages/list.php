@@ -24,15 +24,36 @@
           case 'edit':
             echo 'Notatka została zmieniona !!!';
             break;
+          case 'delete':
+            echo 'Notatka została usunięta';
+            break;
         }
       }
       ?>
     </div>
-    <div class="tbl-header">
+
+    <div>
+      <form class="settings-form" action="/" method="GET">
+        <div>Sortuj po:</div>
+        <div>
+          <label>Tytule:<input name="sortby" type="radio" value="title"></label>
+          <label>Dacie:<input name="sortby" type="radio" value="date"></label>
+        </div>
+        <div>Kierunek sortowania: </div>
+        <div>
+          <label>Rosnąco: <input name="orderby" type="radio" value="asc"> </label>
+          <label>Malejąco: <input name="orderby" type="radio" value="desc"> </label>
+        </div>
+        <input type="submit" value="Sortuj" style="cursor: pointer; padding: 5px 10px;
+            font-size: 14px;">
+      </form>
+    </div>
+
+    <div class=" tbl-header">
       <table cellpadding='0' cellspacing='0' border='0'>
         <thead>
           <tr>
-            <th>Id</th>
+            <th>Lp</th>
             <th>Tytuł</th>
             <th>Data</th>
             <th>Opcje</th>
@@ -45,7 +66,7 @@
         <tbody>
           <?php foreach ($params['notes'] ?? [] as $note) : ?>
             <tr>
-              <td><?php echo $note['id'] ?></td>
+              <td><?php echo $note['lp'] ?></td>
               <td><?php echo $note['title'] ?></td>
               <td><?php echo $note['created'] ?></td>
               <td>

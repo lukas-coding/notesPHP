@@ -33,6 +33,15 @@ class Controller extends AbstractController
         $this->view->render(
             'list',
             [
+                'sort' => [
+                    'by' => 'title',
+                    'order' => 'desc'
+                ]
+
+
+            ],
+
+            [
                 'notes' => $this->database->getNotes(),
                 'before' => $this->request->getParam('before') ?? null,
                 'error' => $this->request->getParam('error') ?? null
@@ -57,6 +66,13 @@ class Controller extends AbstractController
 
     public function deleteAction(): void
     {
+
+        if ($this->request->isPost()) {
+            $id = (int) $this->request->postParam('id');
+            $this->database->deleteNote($id);
+            $this->redirect('/', ['before' => 'delete']);
+        }
+
         $this->view->render(
             'delete',
             ['note' => $this->getNote()]
