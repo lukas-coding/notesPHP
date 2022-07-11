@@ -30,19 +30,14 @@ class Controller extends AbstractController
 
     public function listAction(): void
     {
+        $sortBy = $this->request->getParam('sortby', 'title');
+        $orderBy = $this->request->getParam('orderby', 'asc');
+
         $this->view->render(
             'list',
             [
-                'sort' => [
-                    'by' => 'title',
-                    'order' => 'desc'
-                ]
-
-
-            ],
-
-            [
-                'notes' => $this->database->getNotes(),
+                'sort' => ['by' => $sortBy, 'order' => $orderBy,],
+                'notes' => $this->database->getNotes($sortBy, $orderBy),
                 'before' => $this->request->getParam('before') ?? null,
                 'error' => $this->request->getParam('error') ?? null
             ]

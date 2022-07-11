@@ -31,18 +31,24 @@
       }
       ?>
     </div>
+    <?php dump($params['sort']);
 
+    $sort = $params['sort'] ?? [];
+    $by = $sort['by'] ?? 'title';
+    $order = $sort['order'] ?? 'asc';
+
+    ?>
     <div>
       <form class="settings-form" action="/" method="GET">
         <div>Sortuj po:</div>
         <div>
-          <label>Tytule:<input name="sortby" type="radio" value="title"></label>
-          <label>Dacie:<input name="sortby" type="radio" value="date"></label>
+          <label>Tytule:<input name="sortby" type="radio" value="title" <?php echo $by === 'title' ? 'checked' : '' ?>></label>
+          <label>Dacie:<input name="sortby" type="radio" value="created" <?php echo $by === 'created' ? 'checked' : '' ?>></label>
         </div>
         <div>Kierunek sortowania: </div>
         <div>
-          <label>Rosnąco: <input name="orderby" type="radio" value="asc"> </label>
-          <label>Malejąco: <input name="orderby" type="radio" value="desc"> </label>
+          <label>Rosnąco: <input name="orderby" type="radio" value="asc" <?php echo $order === 'asc' ? 'checked' : '' ?>></label>
+          <label>Malejąco: <input name="orderby" type="radio" value="desc" <?php echo $order === 'desc' ? 'checked' : '' ?>></label>
         </div>
         <input type="submit" value="Sortuj" style="cursor: pointer; padding: 5px 10px;
             font-size: 14px;">
