@@ -31,11 +31,16 @@
       }
       ?>
     </div>
-    <?php dump($params['sort']);
+    <?php
 
     $sort = $params['sort'] ?? [];
     $by = $sort['by'] ?? 'title';
     $order = $sort['order'] ?? 'asc';
+    $page = $params['page'] ?? [];
+    $size = $page['size'] ?? 10;
+    $number = $page['number'] ?? 1;
+
+
 
     ?>
     <div>
@@ -50,8 +55,14 @@
           <label>Rosnąco: <input name="orderby" type="radio" value="asc" <?php echo $order === 'asc' ? 'checked' : '' ?>></label>
           <label>Malejąco: <input name="orderby" type="radio" value="desc" <?php echo $order === 'desc' ? 'checked' : '' ?>></label>
         </div>
-        <input type="submit" value="Sortuj" style="cursor: pointer; padding: 5px 10px;
-            font-size: 14px;">
+        <div>Ilość Danych</div>
+        <div>
+          <label>1<input type="radio" name="pageS" value="1" <?php echo $size === 1 ? 'checked' : '' ?>></label>
+          <label>5<input type="radio" name="pageS" value="5" <?php echo $size === 5 ? 'checked' : '' ?>></label>
+          <label>10<input type="radio" name="pageS" value="10" <?php echo $size === 10 ? 'checked' : '' ?>></label>
+          <label>25<input type="radio" name="pageS" value="25" <?php echo $size === 25 ? 'checked' : '' ?>></label>
+        </div>
+        <input type="submit" value="Sortuj" style="cursor: pointer; padding: 5px 10px;font-size: 14px;">
       </form>
     </div>
 
