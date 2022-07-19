@@ -254,12 +254,12 @@ tr>th:nth-child(1) {
 }
 
 tr>td:nth-child(2) {
-  width: 50%;
-  text-align: left;
+  width: 50px;
+  text-align: center;
 }
 
 tr>th:nth-child(2) {
-  width: 50%;
+  width: 50px;
 }
 
 tr>td:nth-child(3) {

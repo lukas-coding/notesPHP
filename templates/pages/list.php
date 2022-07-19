@@ -38,10 +38,8 @@
     $order = $sort['order'] ?? 'asc';
     $page = $params['page'] ?? [];
     $size = $page['size'] ?? 10;
-    $number = $page['number'] ?? 1;
-
-
-
+    $currentPage = $page['number'] ?? 1;
+    $pages = $page['pages'] ?? 1;
     ?>
     <div>
       <form class="settings-form" action="/" method="GET">
@@ -57,10 +55,10 @@
         </div>
         <div>Ilość Danych</div>
         <div>
-          <label>1<input type="radio" name="pageS" value="1" <?php echo $size === 1 ? 'checked' : '' ?>></label>
-          <label>5<input type="radio" name="pageS" value="5" <?php echo $size === 5 ? 'checked' : '' ?>></label>
-          <label>10<input type="radio" name="pageS" value="10" <?php echo $size === 10 ? 'checked' : '' ?>></label>
-          <label>25<input type="radio" name="pageS" value="25" <?php echo $size === 25 ? 'checked' : '' ?>></label>
+          <label>1<input type="radio" name="pagesize" value="1" <?php echo $size === 1 ? 'checked' : '' ?>></label>
+          <label>5<input type="radio" name="pagesize" value="5" <?php echo $size === 5 ? 'checked' : '' ?>></label>
+          <label>10<input type="radio" name="pagesize" value="10" <?php echo $size === 10 ? 'checked' : '' ?>></label>
+          <label>25<input type="radio" name="pagesize" value="25" <?php echo $size === 25 ? 'checked' : '' ?>></label>
         </div>
         <input type="submit" value="Sortuj" style="cursor: pointer; padding: 5px 10px;font-size: 14px;">
       </form>
@@ -71,6 +69,7 @@
         <thead>
           <tr>
             <th>Lp</th>
+            <th>Id</th>
             <th>Tytuł</th>
             <th>Data</th>
             <th>Opcje</th>
@@ -81,19 +80,49 @@
     <div class="tbl-content">
       <table cellpadding='0' cellspacing='0' border='0'>
         <tbody>
-          <?php foreach ($params['notes'] ?? [] as $note) : ?>
+          <?php $n = 1;
+
+          foreach ($params['notes'] ?? [] as $note) : ?>
             <tr>
-              <td><?php echo $note['lp'] ?></td>
+              <td><?php echo $n++ ?></td>
+              <td><?php echo $note['id'] ?></td>
               <td><?php echo $note['title'] ?></td>
               <td><?php echo $note['created'] ?></td>
               <td>
-                <a href="/?action=show&id=<?php echo $note['id'] ?>"> <button>Pokaż</button></a>
-                <a href="/?action=delete&id=<?php echo $note['id'] ?>"> <button>Usuń</button> </a>
+                <a href="/?action=show&id=<?php echo $note['id'] ?>"><button>Pokaż</button></a>
+                <a href="/?action=delete&id=<?php echo $note['id'] ?>"><button>Usuń</button> </a>
               </td>
             </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
     </div>
+
+    <?php $paginationUrl = "&pagesize=$size?sortby=$by&orderby=$order"; ?>
+
+    <ul class="pagination">
+      <?php if ($currentPage !== 1) : ?>
+        <li>
+          <a href="/?page=<?php echo $currentPage - 1 . $paginationUrl ?>">
+            <button> &lt; &lt;</button>
+          </a>
+        </li>
+      <?php endif; ?>
+      <?php for ($i = 1; $i <= $pages; $i++) : ?>
+        <li>
+          <a href=" /?page=<?php echo $i . $paginationUrl ?>">
+            <button><?php echo $i ?></button>
+          </a>
+        </li>
+      <?php endfor; ?>
+      <?php if ($currentPage < $pages) : ?>
+        <li>
+          <a href="/?page=<?php echo $currentPage + 1 . $paginationUrl ?>">
+            <button>&gt;&gt;</button>
+          </a>
+        </li>
+      <?php endif; ?>
+
+    </ul>
   </section>
 </div>
